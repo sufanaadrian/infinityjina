@@ -862,7 +862,7 @@ function HeroUltramodern() {
           <div
             className="absolute inset-x-0 -inset-y-10 pointer-events-none"
             style={{
-              backdropFilter: "blur(1px)",
+              backdropFilter: "blur(0.2px)",
               background: "rgba(13, 13, 13, 0.26)",
             }}
             aria-hidden="true"
