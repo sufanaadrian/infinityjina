@@ -862,7 +862,7 @@ function HeroUltramodern() {
           <div
             className="absolute inset-x-0 -inset-y-10 pointer-events-none"
             style={{
-              backdropFilter: "blur(0.2px)",
+              backdropFilter: "blur(0.1px)",
               background: "rgba(13, 13, 13, 0.26)",
             }}
             aria-hidden="true"
@@ -900,19 +900,9 @@ function HeroUltramodern() {
           <RichInline text={business.tagline} />
         </p>
 
-        <a
-          href="#rezervare"
-          className="um-in group inline-flex items-center gap-4 text-[10px] tracking-[0.45em] uppercase text-white/50 hover:text-gold transition-colors duration-300 font-thin"
-          style={{ animationDelay: "1.1s" }}
-        >
-          <span className="block h-px w-6 bg-current transition-[width] duration-300 group-hover:w-10" />
-          Rezervă
-          <span className="block h-px w-6 bg-current transition-[width] duration-300 group-hover:w-10" />
-        </a>
-
         <p
-          className="um-in mt-8 text-[10px] tracking-[0.3em] uppercase text-white/55 font-light"
-          style={{ animationDelay: "1.25s" }}
+          className="um-in mt-0 text-[10px] tracking-[0.3em] uppercase text-white/55 font-light"
+          style={{ animationDelay: "1.1s" }}
         >
           <RichInline text={business.hours} />
         </p>
