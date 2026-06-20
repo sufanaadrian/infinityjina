@@ -15,6 +15,7 @@ import Contact from "@/components/Contact";
 import Reservation from "@/components/Reservation";
 import Footer from "@/components/Footer";
 import FloatingButtons from "@/components/FloatingButtons";
+import Reveal from "@/components/Reveal";
 
 const plainName = stripMarkdown(business.name);
 const plainTagline = stripMarkdown(business.tagline);
@@ -85,6 +86,17 @@ export default function Home() {
         }
       >
         <Hero />
+        {isUltra && (
+          <div className="bg-[#0A0A0B] pt-12 pb-0 overflow-hidden pointer-events-none">
+            <Reveal className="um-separator-wrap flex flex-col items-center" safetyMs={0}>
+              <div className="um-sep-vline" />
+              <div className="relative flex items-center justify-center w-full" style={{ height: "8px" }}>
+                <div className="um-sep-hline" />
+                <div className="um-sep-dot" />
+              </div>
+            </Reveal>
+          </div>
+        )}
         {order.map((id) => (
           <Fragment key={id}>{sectionComponents[id]}</Fragment>
         ))}

@@ -68,10 +68,12 @@ function AboutUltramodern({ bulletPoints, stats, showStats, headingTitle, ctaRad
         <UltraHeading eyebrow="Despre noi" title={headingTitle} align="center" />
 
         <Reveal delay={0.1}>
-          <RichText
-            text={business.description}
-            className="text-xl md:text-3xl font-extralight leading-relaxed text-white/85 max-w-3xl mx-auto"
-          />
+          <div
+            className="text-xl md:text-2xl font-thin leading-relaxed text-white/80 max-w-3xl mx-auto"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            <RichText text={business.description} />
+          </div>
         </Reveal>
 
         {bulletPoints.length > 0 && (

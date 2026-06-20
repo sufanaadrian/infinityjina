@@ -263,16 +263,81 @@ body {
 
 /* Scroll reveal (driven by components/Reveal.tsx adding `.is-visible`). A
    safety timer in that component force-reveals after 1.5s so content can never
-   get stuck hidden if the observer never fires. */
+   get stuck hidden if the observer never fires. Perspective + rotateX gives a
+   cinematic "rising from depth" feel rather than a plain translateY. */
 .theme-ultramodern .um-reveal {
   opacity: 0;
-  transform: translateY(34px);
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: perspective(1000px) rotateX(5deg) translateY(28px);
+  transform-origin: bottom center;
+  transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
 .theme-ultramodern .um-reveal.is-visible {
   opacity: 1;
+  transform: perspective(1000px) rotateX(0deg) translateY(0);
+}
+
+/* Hero → section separator. Three-beat sequence on scroll:
+   Beat 1 — vertical hairline drops from above (0.6 s)
+   Beat 2 — dot blooms at the landing point with a gold glow (delay 0.55 s)
+   Beat 3 — full-width horizontal lines explode outward from the dot (delay 0.6 s)
+   Must come AFTER .um-reveal to override the 3-D transform at same specificity. */
+.theme-ultramodern .um-separator-wrap {
+  opacity: 0;
   transform: none;
+  transition: opacity 0.25s ease;
+}
+.theme-ultramodern .um-separator-wrap.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.theme-ultramodern .um-sep-vline {
+  width: 1px;
+  height: 52px;
+  background: linear-gradient(to bottom, transparent, var(--gold));
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.theme-ultramodern .um-separator-wrap.is-visible .um-sep-vline {
+  transform: scaleY(1);
+}
+.theme-ultramodern .um-sep-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--gold);
+  box-shadow: 0 0 0 0 transparent;
+  transform: scale(0);
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.55s,
+    box-shadow 0.7s ease 0.55s;
+}
+.theme-ultramodern .um-separator-wrap.is-visible .um-sep-dot {
+  transform: scale(1);
+  box-shadow: 0 0 28px 10px color-mix(in srgb, var(--gold) 32%, transparent);
+}
+.theme-ultramodern .um-sep-hline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    color-mix(in srgb, var(--gold) 50%, transparent) 12%,
+    var(--gold) 38%,
+    var(--gold) 62%,
+    color-mix(in srgb, var(--gold) 50%, transparent) 88%,
+    transparent 100%
+  );
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.6s;
+}
+.theme-ultramodern .um-separator-wrap.is-visible .um-sep-hline {
+  transform: scaleX(1);
 }
 
 /* Soft pulsing gold light source behind the hero name — the glow that makes a
@@ -373,5 +438,9 @@ body {
   .theme-ultramodern .um-grow { opacity: 1; transform: none; filter: none; }
   .theme-ultramodern .gold-sheen { -webkit-text-fill-color: var(--gold); color: var(--gold); }
   .theme-ultramodern .um-reveal { opacity: 1; transform: none; transition: none; }
+  .theme-ultramodern .um-separator-wrap { opacity: 1; }
+  .theme-ultramodern .um-sep-vline { transform: scaleY(1); transition: none; }
+  .theme-ultramodern .um-sep-dot { transform: scale(1); box-shadow: 0 0 28px 10px color-mix(in srgb, var(--gold) 32%, transparent); transition: none; }
+  .theme-ultramodern .um-sep-hline { transform: scaleX(1); transition: none; }
   .theme-ultramodern .um-marquee { animation: none; }
 }

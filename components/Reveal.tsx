@@ -14,9 +14,11 @@ type RevealProps = {
   /** Stagger the entrance, in seconds. */
   delay?: number;
   id?: string;
+  /** Safety-timer duration in ms. Pass 0 to disable (use for animations that must only fire on scroll, not on timeout). Default: 1500. */
+  safetyMs?: number;
 };
 
-export default function Reveal({ children, as, className = "", delay = 0, id }: RevealProps) {
+export default function Reveal({ children, as, className = "", delay = 0, id, safetyMs = 1500 }: RevealProps) {
   const Tag = (as ?? "div") as ElementType;
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
@@ -38,11 +40,12 @@ export default function Reveal({ children, as, className = "", delay = 0, id }: 
     );
     observer.observe(el);
 
-    // Safety net — never leave content hidden.
-    const timer = window.setTimeout(reveal, 1500);
+    // Safety net — never leave content hidden. Disabled (safetyMs=0) for
+    // scroll-only animations that must not fire until the user actually scrolls.
+    const timer = safetyMs > 0 ? window.setTimeout(reveal, safetyMs) : null;
     return () => {
       observer.disconnect();
-      window.clearTimeout(timer);
+      if (timer !== null) window.clearTimeout(timer);
     };
   }, [visible]);
 

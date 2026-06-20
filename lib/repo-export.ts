@@ -39,7 +39,14 @@ export function pushToGithub(dest: string, repoName: string, isPrivate: boolean)
     const visibility = isPrivate ? "--private" : "--public";
     execSync(`gh repo create ${repoName} ${visibility} --source=. --remote=origin --push`, { cwd: dest, stdio: "pipe" });
   } else {
-    execSync("git push -u origin HEAD", { cwd: dest, stdio: "pipe" });
+    try {
+      execSync("git push -u origin HEAD", { cwd: dest, stdio: "pipe" });
+    } catch {
+      // Remote has commits the local repo doesn't have yet — rebase on top
+      // of the remote branch then retry the push.
+      execSync("git pull --rebase origin HEAD", { cwd: dest, stdio: "pipe" });
+      execSync("git push -u origin HEAD", { cwd: dest, stdio: "pipe" });
+    }
   }
 
   return { url: execSync("gh repo view --json url -q .url", { cwd: dest, stdio: "pipe" }).toString().trim() };
