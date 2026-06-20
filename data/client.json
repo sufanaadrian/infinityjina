@@ -1,0 +1,177 @@
+{
+  "name": "Infinity Jina",
+  "tagline": "RETREAT & SPA",
+  "description": "Panoramic Hill Jina este destinația unde natura spectaculoasă și confortul modern se întâlnesc pentru a crea experiențe autentice. Cu 4 camere duble, 2 camere cvadruple, salon elegant și piscină interioară încălzită, vila este alegerea ideală pentru retreaturi, team buildinguri, vacanțe cu familia sau escapade alături de prieteni. Descoperă farmecul Mărginimii Sibiului și bucură-te de o panoramă de 360° care îți va rămâne în suflet.",
+  "phone": "0741709075",
+  "email": "yancu_1987@yahoo.com",
+  "address": "Sibiu",
+  "city": "Comuna Jina",
+  "hours": "Check-in: 14:00 | Check-out: 11:00",
+  "primaryColor": "#c9a86a",
+  "businessType": "pension",
+  "designVariant": "ultramodern",
+  "heroImageUrl": "/images/infinity-jina/ChatGPT Image Jun 20, 2026 at 10_04_36 AM.png",
+  "heroImageAlt": "",
+  "services": [
+    {
+      "title": "Piscină interioară cu jacuzzi",
+      "description": "Relaxați-vă în piscina interioară și bucurați-vă de momente de răsfăț în jacuzzi, indiferent de anotimp.",
+      "price": ""
+    },
+    {
+      "title": "Panoramă 360°",
+      "description": "Bucurați-vă de o priveliște spectaculoasă asupra împrejurimilor din punctul nostru de belvedere, care oferă o panoramă impresionantă de 360° asupra peisajelor din Mărginimea Sibiului.\n",
+      "price": ""
+    },
+    {
+      "title": "Pachete All Inclusive",
+      "description": "Pentru grupurile organizate oferim pachete all-inclusive, concepute pentru o experiență completă și fără griji, într-un cadru relaxant și primitor.\n",
+      "price": ""
+    },
+    {
+      "title": "Mic dejun, prânz și cină",
+      "description": "Oaspeții se pot bucura de preparate delicioase, tradiționale, servite pe parcursul întregii zile, cu posibilitatea de a opta pentru mic dejun, prânz și cină.\n",
+      "price": ""
+    }
+  ],
+  "rooms": [
+    {
+      "title": "Cameră dublă ",
+      "description": "Cameră cu un pat matrimonial, perfectă pentru un cuplu.",
+      "price": "",
+      "features": [
+        "16 m²",
+        "Baie privată",
+        "Balcon"
+      ],
+      "imageUrl": "",
+      "bookingUrl": "",
+      "images": []
+    },
+    {
+      "title": "Camera cvadruplă",
+      "description": " Cameră  cu un pat matrimonial și două paturi individuale, perfectă pentru o familie.",
+      "price": "",
+      "features": [
+        "25 m²",
+        "Baie privată",
+        "Balcon"
+      ],
+      "imageUrl": "",
+      "bookingUrl": "",
+      "images": []
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Elena Daniela",
+      "role": "Recenzie google.com",
+      "stars": 5,
+      "text": "Totul la superlativ. Curățenie, totul modern, amenajat cu gust.\nGazdele foarte primitoare, mâncarea excelenta!\nRecomand!!!"
+    },
+    {
+      "name": "Cristian Lamureanu",
+      "role": "Recenzie google.com",
+      "stars": 5,
+      "text": "Locație superbă,peisaj de poveste,gazde excelente și am spus tot.Felicitări!\n"
+    },
+    {
+      "name": "Teofil Stefan",
+      "role": "Recenzie google.com",
+      "stars": 5,
+      "text": "O pensiune nouă ,peisaj de poveste si niște gazde tinere si foarte primitoare.\n"
+    },
+    {
+      "name": "Popescu Rebeca",
+      "role": "Recenzie google.com",
+      "stars": 5,
+      "text": "La Panoramic Hill Jina, am ajuns ca într-o poveste de demult, unde dealurile veghează liniștea și oamenii te primesc cu sufletul deschis..."
+    },
+    {
+      "name": "Ioana",
+      "role": "Recenzie google.com",
+      "stars": 5,
+      "text": "O cabană foarte frumoasa cu o priveliște superbă! Recomand!"
+    }
+  ],
+  "faq": [
+    {
+      "question": "La ce oră este check-in și check-out?",
+      "answer": "Check-in de la ora 14:00, check-out până la ora 11:00. "
+    },
+    {
+      "question": "Este micul dejun inclus în tarif?",
+      "answer": "Micul dejun poate fi adăugat la rezervare. Contactați-ne pentru detalii și prețuri."
+    },
+    {
+      "question": "Piscina interioară este încalzită?",
+      "answer": "Da, piscina interioară este încalzită."
+    },
+    {
+      "question": "Există parcare la pensiune?",
+      "answer": "Da, oferim parcare privată gratuită pentru toți oaspeții."
+    }
+  ],
+  "bulletPoints": [
+    "Locație pitorească în Jina, cu priveliști spectaculoase",
+    "Zonă liniștită, perfectă pentru relaxare și evadare din cotidian",
+    "Mese și pachete all-inclusive disponibile",
+    ""
+  ],
+  "stats": [],
+  "gallery": [],
+  "socialLinks": {
+    "facebook": "https://www.facebook.com/people/Panoramic-Hill-Jina/61585457155841/"
+  },
+  "whatsapp": "40741709075",
+  "googleMapsEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22258.067837462622!2d23.6833477!3d45.7860491!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x474c3bc3e1107db7%3A0x1f10c72c65f7bb95!2s557110%20Jina!5e0!3m2!1sro!2sro!4v1781024404443!5m2!1sro!2sro",
+  "web3formsKey": "c5f965a1-4f4b-434e-a8b3-00484d477629",
+  "heroLayout": "left",
+  "heroOverlay": "medium",
+  "bookingOptions": [
+    {
+      "title": "Rezervare integrală ",
+      "description": "Pensiunea poate fi rezervată integral pe tot parcursul anului.",
+      "season": "Pe parcursul întregului an"
+    },
+    {
+      "title": "Rezervare per cameră ",
+      "description": "Fiecare cameră poate fi rezervată individual pe parcursul verii.",
+      "season": "Doar Iunie - August"
+    }
+  ],
+  "bookingNotes": "- Capacitate: 12–16 persoane\n- Cazare: 6 camere (4 camere duble și 2 camere cvadruple)\n- Tarif weekend: 2.500 lei/noapte sau 5.000 lei/weekend\n- Tarif în timpul săptămânii: 2.250 lei/noapte sau 4.500 lei pentru 2 nopți\n\n**Pentru disponibilitate și rezervări, vă rugăm să ne contactați telefonic.**\n\n*Tarifele sunt informative și pot varia în funcție de sezon, perioadă și disponibilitate. Pentru o ofertă actualizată, vă rugăm să ne contactați.*",
+  "buttonStyle": "sharp",
+  "showSections": {
+    "gallery": true,
+    "stats": true
+  },
+  "sectionOrder": [
+    "about",
+    "services",
+    "gallery",
+    "rooms",
+    "reviews",
+    "faq"
+  ],
+  "logoUrl": "",
+  "logoSize": "lg",
+  "logoShape": "circle",
+  "headerStyle": "transparent",
+  "headerTextSize": "sm",
+  "sectionHeadings": {
+    "gallery": {
+      "subtitle": ""
+    }
+  },
+  "headerShowCallButton": false,
+  "headerScrollSolid": false,
+  "showGoogleReviewsButton": true,
+  "googleReviewsUrl": "https://www.google.com/maps/place/Panoramic+Hill+Jina/@45.7715705,23.6828361,15z/data=!4m8!3m7!1s0x474c3b001951f969:0x3908729f48434638!8m2!3d45.7715705!4d23.6828361!9m1!1b1!16s%2Fg%2F11msf89zhq?entry=ttu&g_ep=EgoyMDI2MDYwOS4wIKXMDSoASAFQAw%3D%3D",
+  "headingFont": "jost",
+  "bodyFont": "quicksand",
+  "heroTint": "none",
+  "repoName": "infinityjina",
+  "heroImagePortraitUrl": "/images/infinity-jina/portarit.png",
+  "heroTextBackdrop": true
+}

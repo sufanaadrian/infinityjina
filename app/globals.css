@@ -1,0 +1,377 @@
+@import "tailwindcss";
+
+:root {
+  --background: #111827;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Stop stray decorative/absolute elements from letting the page drift
+   sideways on touch devices, without creating a new scroll container that
+   would break the fixed navbar or the hero height. */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans, Arial, Helvetica, sans-serif);
+}
+
+/* Typography — `--font-heading` / `--font-body` are set inline on the
+   .theme-* wrapper in app/page.tsx based on business.headingFont / bodyFont,
+   independent of the design variant. */
+.theme-classic,
+.theme-nature,
+.theme-dark,
+.theme-bold,
+.theme-ultramodern {
+  font-family: var(--font-body), var(--font-sans, sans-serif);
+}
+
+.theme-classic h1, .theme-classic h2, .theme-classic h3, .theme-classic h4,
+.theme-nature h1, .theme-nature h2, .theme-nature h3, .theme-nature h4,
+.theme-dark h1, .theme-dark h2, .theme-dark h3, .theme-dark h4,
+.theme-bold h1, .theme-bold h2, .theme-bold h3, .theme-bold h4,
+.theme-ultramodern h1, .theme-ultramodern h2, .theme-ultramodern h3, .theme-ultramodern h4 {
+  font-family: var(--font-heading), serif;
+}
+
+/* Text/icon color for content placed on a `primaryColor` background —
+   `--primary-contrast` is set inline on the .theme-* wrapper from
+   getPrimaryContrastColor() and flips between near-black and near-white
+   depending on how light or dark the chosen primary color is. */
+.text-on-primary { color: var(--primary-contrast, #ffffff); }
+.text-on-primary-80 { color: color-mix(in srgb, var(--primary-contrast, #ffffff) 80%, transparent); }
+
+/* Hide scrollbar for horizontal carousels (e.g. nature testimonials) while
+   keeping the element scrollable. */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Nature variant accent tones — `--nature-accent` is set inline on the
+   .theme-nature wrapper from getNatureAccentColor(). Every text, border and
+   fill in the Nature variant derives from this single color so it stays
+   consistent with whatever accent tint the user picks. */
+.theme-nature {
+  --nature-ink: var(--nature-accent, #3a2a1a);
+}
+.theme-nature .text-nature { color: var(--nature-ink); }
+.theme-nature .text-nature-80 { color: color-mix(in srgb, var(--nature-ink) 80%, transparent); }
+.theme-nature .text-nature-70 { color: color-mix(in srgb, var(--nature-ink) 70%, transparent); }
+.theme-nature .text-nature-60 { color: color-mix(in srgb, var(--nature-ink) 60%, transparent); }
+.theme-nature .text-nature-50 { color: color-mix(in srgb, var(--nature-ink) 50%, transparent); }
+.theme-nature .text-nature-40 { color: color-mix(in srgb, var(--nature-ink) 40%, transparent); }
+.theme-nature .hover\:text-nature:hover { color: var(--nature-ink); }
+
+/* Soft borders, fills and shadows derived from the accent. */
+.theme-nature .border-nature-soft { border-color: color-mix(in srgb, var(--nature-ink) 18%, white); }
+.theme-nature .bg-nature-soft { background-color: color-mix(in srgb, var(--nature-ink) 8%, white); }
+.theme-nature .bg-nature-chip { background-color: color-mix(in srgb, var(--nature-ink) 12%, white); }
+.theme-nature .hover\:bg-nature-soft:hover { background-color: color-mix(in srgb, var(--nature-ink) 8%, white); }
+.theme-nature .shadow-nature-5 { --tw-shadow-color: color-mix(in srgb, var(--nature-ink) 5%, transparent); }
+.theme-nature .shadow-nature-10 { --tw-shadow-color: color-mix(in srgb, var(--nature-ink) 10%, transparent); }
+
+/* ───────────────────────── Ultramodern variant ─────────────────────────────
+   Gold-on-black, elegant & minimalist. `--gold` is the client's primaryColor,
+   set inline on the .theme-ultramodern wrapper (app/page.tsx). Everything gold
+   derives from it so the whole variant follows whatever gold tone is picked. */
+.theme-ultramodern {
+  --gold: #c9a86a;
+  --um-line: color-mix(in srgb, var(--gold) 22%, transparent);
+  --um-line-faint: color-mix(in srgb, #ffffff 8%, transparent);
+  --um-bg: #0a0a0b;
+  color: #e9e7e2;
+}
+
+/* Subtle film grain laid over the whole variant — gives the flat black a tactile,
+   photographic depth that reads as "expensive print", not "web page". Pinned via
+   a fixed pseudo-element so it never scrolls or intercepts clicks. */
+.theme-ultramodern {
+  position: relative;
+}
+.theme-ultramodern::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Elegant signature script — used only for the brand name / display accents.
+   Allura, a thin airy luxury signature standing in for "Lile Dahliya Script". */
+.theme-ultramodern .font-script {
+  font-family: var(--font-script), cursive;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* Gold tone helpers. */
+.theme-ultramodern .text-gold { color: var(--gold); }
+.theme-ultramodern .text-gold-70 { color: color-mix(in srgb, var(--gold) 70%, transparent); }
+.theme-ultramodern .border-gold { border-color: var(--gold); }
+.theme-ultramodern .border-gold-soft { border-color: color-mix(in srgb, var(--gold) 32%, transparent); }
+.theme-ultramodern .bg-gold-soft { background-color: color-mix(in srgb, var(--gold) 9%, transparent); }
+.theme-ultramodern .hover\:bg-gold-soft:hover { background-color: color-mix(in srgb, var(--gold) 9%, transparent); }
+.theme-ultramodern .hover\:border-gold:hover { border-color: var(--gold); }
+
+/* Metallic gold text — a moving sheen swept across the gradient fill. */
+.theme-ultramodern .gold-sheen {
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--gold) 55%, #fff) 0%,
+    var(--gold) 30%,
+    color-mix(in srgb, var(--gold) 60%, #fff) 50%,
+    var(--gold) 70%,
+    color-mix(in srgb, var(--gold) 60%, #000) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: um-sheen 6s linear infinite;
+}
+
+/* Thin animated gold rule that draws itself in. */
+.theme-ultramodern .um-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* The long "————————" divider the client wants between a headline and its
+   sub-text. A center diamond node makes it read as an intentional ornament. */
+.theme-ultramodern .um-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--gold) 80%, transparent) 50%, transparent);
+}
+.theme-ultramodern .um-divider-node {
+  width: 5px;
+  height: 5px;
+  transform: rotate(45deg);
+  background: var(--gold);
+}
+
+/* Ghost outline numerals that ink in to solid gold on row hover. */
+.theme-ultramodern .um-outline-num {
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--gold) 50%, transparent);
+  transition: color 0.5s ease, -webkit-text-stroke-color 0.5s ease;
+}
+.theme-ultramodern .group:hover .um-outline-num {
+  color: var(--gold);
+  -webkit-text-stroke-color: var(--gold);
+}
+
+/* Seamless infinite marquee (testimonials, label strips). The track holds two
+   identical copies, so translating it -50% loops with no seam. */
+@keyframes um-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.theme-ultramodern .um-marquee {
+  display: flex;
+  width: max-content;
+  animation: um-marquee var(--um-marquee-dur, 45s) linear infinite;
+}
+.theme-ultramodern .um-marquee-wrap:hover .um-marquee {
+  animation-play-state: paused;
+}
+
+/* Underline-only form fields — no boxes, just a hairline that turns gold. */
+.theme-ultramodern .um-input {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, #fff 16%, transparent);
+  border-radius: 0;
+  color: #fff;
+  transition: border-color 0.4s ease;
+}
+.theme-ultramodern .um-input::placeholder { color: rgba(255, 255, 255, 0.3); }
+.theme-ultramodern .um-input:focus { outline: none; border-bottom-color: var(--gold); }
+
+/* Vertical edge labels + slow photo zoom on hover. */
+.theme-ultramodern .um-vlabel { writing-mode: vertical-rl; }
+.theme-ultramodern .um-img-zoom { transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1); }
+.theme-ultramodern .group:hover .um-img-zoom { transform: scale(1.07); }
+
+@keyframes um-sheen {
+  to { background-position: 200% center; }
+}
+@keyframes um-fade-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes um-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+/* Continuous, slow cinematic drift on the hero photo — zooms AND pans, looping
+   back and forth so the background is always gently in motion (not a one-shot
+   zoom that freezes). */
+@keyframes um-kenburns {
+  from { transform: scale(1.08) translate3d(3.5%, 2%, 0); }
+  to { transform: scale(1.32) translate3d(-3.5%, -2.5%, 0); }
+}
+@keyframes um-rule-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+/* A soft gold light that slowly drifts across the hero photo. */
+@keyframes um-hero-drift {
+  from { transform: translate3d(-22%, -8%, 0); }
+  to { transform: translate3d(22%, 8%, 0); }
+}
+
+.theme-ultramodern .um-kenburns {
+  animation: um-kenburns 18s ease-in-out infinite alternate;
+  transform-origin: center;
+  will-change: transform;
+}
+.theme-ultramodern .um-hero-drift {
+  position: absolute;
+  inset: -25%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: radial-gradient(38% 52% at 50% 50%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 70%);
+  animation: um-hero-drift 16s ease-in-out infinite alternate;
+}
+/* Gentle opacity-only fade for the hero brand name (no rise, no per-letter). */
+.theme-ultramodern .um-namein { opacity: 0; animation: um-fade-in 1.8s ease 0.2s forwards; }
+.theme-ultramodern .um-in { opacity: 0; animation: um-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.theme-ultramodern .um-grow { transform: scaleX(0); transform-origin: left; animation: um-rule-grow 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+/* Scroll reveal (driven by components/Reveal.tsx adding `.is-visible`). A
+   safety timer in that component force-reveals after 1.5s so content can never
+   get stuck hidden if the observer never fires. */
+.theme-ultramodern .um-reveal {
+  opacity: 0;
+  transform: translateY(34px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.theme-ultramodern .um-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Soft pulsing gold light source behind the hero name — the glow that makes a
+   black screen feel lit rather than empty. */
+@keyframes um-glow {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.85; transform: translate(-50%, -50%) scale(1.12); }
+}
+.theme-ultramodern .um-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 60vw;
+  max-width: 760px;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  pointer-events: none;
+  background: radial-gradient(circle, color-mix(in srgb, var(--gold) 26%, transparent) 0%, transparent 62%);
+  filter: blur(20px);
+  animation: um-glow 9s ease-in-out infinite;
+}
+
+/* Vertical hairline that draws itself down — the hero scroll cue. */
+@keyframes um-line-draw {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+.theme-ultramodern .um-scrollline {
+  width: 1px;
+  height: 64px;
+  transform-origin: top;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: um-line-draw 1.4s cubic-bezier(0.22, 1, 0.36, 1) 1.2s both;
+}
+.theme-ultramodern .um-scrollline-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: var(--gold);
+  animation: um-dot-fall 2.4s ease-in-out 1.2s infinite;
+}
+@keyframes um-dot-fall {
+  0% { transform: translateY(-6px); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(58px); opacity: 0; }
+}
+
+/* Editorial gallery: sharp-cornered tiles, a slow zoom + gold veil on hover and
+   a "VIEW" cue that rises in. Luxury photo presentation, no rounded web look. */
+.theme-ultramodern .um-gallery-tile {
+  position: relative;
+  overflow: hidden;
+  background: #111113;
+}
+.theme-ultramodern .um-gallery-tile img {
+  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.theme-ultramodern .um-gallery-tile:hover img {
+  transform: scale(1.08);
+}
+.theme-ultramodern .um-gallery-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.theme-ultramodern .um-gallery-tile:hover .um-gallery-veil { opacity: 1; }
+.theme-ultramodern .um-gallery-cue {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.theme-ultramodern .um-gallery-tile:hover .um-gallery-cue {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-ultramodern .um-kenburns,
+  .theme-ultramodern .um-hero-drift,
+  .theme-ultramodern .um-in,
+  .theme-ultramodern .um-namein,
+  .theme-ultramodern .um-grow,
+  .theme-ultramodern .um-glow,
+  .theme-ultramodern .um-scrollline,
+  .theme-ultramodern .um-scrollline-dot,
+  .theme-ultramodern .gold-sheen { animation: none; }
+  .theme-ultramodern .um-in,
+  .theme-ultramodern .um-namein,
+  .theme-ultramodern .um-grow { opacity: 1; transform: none; filter: none; }
+  .theme-ultramodern .gold-sheen { -webkit-text-fill-color: var(--gold); color: var(--gold); }
+  .theme-ultramodern .um-reveal { opacity: 1; transform: none; transition: none; }
+  .theme-ultramodern .um-marquee { animation: none; }
+}
