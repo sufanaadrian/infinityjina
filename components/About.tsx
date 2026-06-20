@@ -60,55 +60,61 @@ export default function About() {
   return <AboutClassic {...props} />;
 }
 
-// ─── Ultramodern — centered manifesto + animated count-up stat band ────────
+// ─── Ultramodern — editorial split: sticky heading left, manifesto text right ─
 function AboutUltramodern({ bulletPoints, stats, showStats, headingTitle, ctaRadius }: SectionProps) {
   return (
-    <section id="about" className="py-28 md:py-36 bg-[#0C0C0E]">
-      <div className="max-w-4xl mx-auto px-6 text-center">
-        <UltraHeading eyebrow="Despre noi" title={headingTitle} align="center" />
+    <section id="about" className="bg-[#0C0C0E]">
+      {/* Editorial split — heading anchored left, description flows right */}
+      <div className="max-w-6xl mx-auto px-6 pt-28 md:pt-36 pb-20 md:pb-24 grid md:grid-cols-[1fr_1.4fr] gap-16 md:gap-24 items-start">
+        {/* Left col: sticky heading block */}
+        <div className="md:sticky md:top-28 md:self-start">
+          <UltraHeading eyebrow="Despre noi" title={headingTitle} align="left" />
+          {bulletPoints.length > 0 && (
+            <Reveal delay={0.15} className="mt-10 space-y-4">
+              {bulletPoints.map((point) => (
+                <div key={point} className="flex items-start gap-3">
+                  <span className="mt-1.5 w-1.5 h-1.5 rotate-45 shrink-0" style={{ backgroundColor: "var(--gold)" }} />
+                  <span className="text-sm text-white/55 font-light tracking-[0.1em] uppercase leading-relaxed">{point}</span>
+                </div>
+              ))}
+            </Reveal>
+          )}
+        </div>
 
-        <Reveal delay={0.1}>
-          <div
-            className="text-xl md:text-2xl font-thin leading-relaxed text-white/80 max-w-3xl mx-auto"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            <RichText text={business.description} />
-          </div>
-        </Reveal>
-
-        {bulletPoints.length > 0 && (
-          <Reveal delay={0.15} className="mt-12 flex flex-wrap justify-center items-center gap-x-7 gap-y-3">
-            {bulletPoints.map((point, i) => (
-              <span key={point} className="flex items-center gap-7 text-sm text-white/60 font-light tracking-[0.15em] uppercase">
-                {i > 0 && <span className="w-1.5 h-1.5 rotate-45 shrink-0" style={{ backgroundColor: "var(--gold)" }} />}
-                {point}
-              </span>
-            ))}
+        {/* Right col: manifesto description + CTA */}
+        <div>
+          <Reveal delay={0.08}>
+            <div className="text-base md:text-lg font-light leading-[1.9] text-white/60 tracking-wide">
+              <RichText text={business.description} />
+            </div>
           </Reveal>
-        )}
 
-        {showStats && (
-          <Reveal delay={0.2} className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-px bg-white/[0.08] border border-white/[0.08]">
+          <Reveal delay={0.18} className="mt-12">
+            <a
+              href={`tel:${business.phone.replace(/\s/g, "")}`}
+              className={`inline-flex items-center gap-2.5 font-medium tracking-[0.15em] uppercase text-sm text-on-primary px-9 py-4 ${ctaRadius} transition-all hover:shadow-[0_0_30px_-5px_var(--gold)]`}
+              style={{ backgroundColor: "var(--gold)" }}
+            >
+              <PhoneIcon />
+              {business.phone}
+            </a>
+          </Reveal>
+        </div>
+      </div>
+
+      {/* Full-width stat strip — separated from the editorial block above */}
+      {showStats && (
+        <Reveal delay={0.1} className="border-t border-white/[0.07]">
+          <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 divide-x divide-white/[0.07]">
             {stats.map((stat) => (
-              <div key={stat.label} className="bg-[#0C0C0E] py-9 px-4">
-                <CountUp value={stat.value} className="block text-4xl md:text-5xl font-extralight text-gold mb-2.5" />
-                <p className="text-[10px] md:text-[11px] text-white/45 uppercase tracking-[0.25em]">{stat.label}</p>
+              <div key={stat.label} className="py-12 px-6 text-center">
+                <CountUp value={stat.value} className="block text-5xl md:text-6xl font-extralight text-gold mb-3" />
+                <p className="text-[10px] text-white/40 uppercase tracking-[0.3em]">{stat.label}</p>
               </div>
             ))}
-          </Reveal>
-        )}
-
-        <Reveal delay={0.25}>
-          <a
-            href={`tel:${business.phone.replace(/\s/g, "")}`}
-            className={`inline-flex items-center gap-2.5 mt-16 font-medium tracking-[0.15em] uppercase text-sm text-on-primary px-9 py-4 ${ctaRadius} transition-all hover:shadow-[0_0_30px_-5px_var(--gold)]`}
-            style={{ backgroundColor: "var(--gold)" }}
-          >
-            <PhoneIcon />
-            {business.phone}
-          </a>
+          </div>
         </Reveal>
-      </div>
+      )}
     </section>
   );
 }
