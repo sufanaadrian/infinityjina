@@ -57,11 +57,18 @@ export type ShowSections = {
   faq?: boolean;
   stats?: boolean;
   contactForm?: boolean;
+  process?: boolean;
+  reservation?: boolean;
 };
 
-export type SectionId = "services" | "gallery" | "about" | "reviews" | "rooms" | "faq";
+export type ProcessStep = {
+  title: string;
+  desc: string;
+};
 
-export const DEFAULT_SECTION_ORDER: SectionId[] = ["services", "gallery", "about", "reviews", "rooms", "faq"];
+export type SectionId = "services" | "gallery" | "about" | "reviews" | "rooms" | "faq" | "process" | "reservation";
+
+export const DEFAULT_SECTION_ORDER: SectionId[] = ["services", "gallery", "about", "reviews", "rooms", "faq", "process", "reservation"];
 
 // Default tinted-section background for the Nature design variant.
 export const DEFAULT_NATURE_BG = "#F5F1E6";
@@ -85,6 +92,7 @@ export type SectionHeadings = {
   reviews?: SectionHeading;
   faq?: SectionHeading;
   contact?: SectionHeading;
+  reservation?: SectionHeading;
 };
 
 export type BusinessConfig = {
@@ -135,6 +143,9 @@ export type BusinessConfig = {
   bookingOptions?: BookingOption[];
   bookingOptionsTitle?: string;
   web3formsKey?: string;
+  reservationFormShowDates?: boolean;
+  reservationFormSubmitLabel?: string;
+  reservationFormMessagePlaceholder?: string;
   whatsapp?: string;
   gallery?: string[];
   galleryPreviewLimit?: number;
@@ -145,6 +156,7 @@ export type BusinessConfig = {
   rooms?: Room[];
   bulletPoints?: string[];
   stats?: Stat[];
+  processSteps?: ProcessStep[];
   sectionHeadings?: SectionHeadings;
 };
 

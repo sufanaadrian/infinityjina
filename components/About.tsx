@@ -102,19 +102,6 @@ function AboutUltramodern({ bulletPoints, stats, showStats, headingTitle, ctaRad
         </div>
       </div>
 
-      {/* Full-width stat strip — separated from the editorial block above */}
-      {showStats && (
-        <Reveal delay={0.1} className="border-t border-white/[0.07]">
-          <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 divide-x divide-white/[0.07]">
-            {stats.map((stat) => (
-              <div key={stat.label} className="py-12 px-6 text-center">
-                <CountUp value={stat.value} className="block text-5xl md:text-6xl font-extralight text-gold mb-3" />
-                <p className="text-[10px] text-white/40 uppercase tracking-[0.3em]">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-      )}
     </section>
   );
 }

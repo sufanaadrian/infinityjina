@@ -13,6 +13,8 @@ import Rooms from "@/components/Rooms";
 import FAQ from "@/components/FAQ";
 import Contact from "@/components/Contact";
 import Reservation from "@/components/Reservation";
+import StatsStrip from "@/components/StatsStrip";
+import Process from "@/components/Process";
 import Footer from "@/components/Footer";
 import FloatingButtons from "@/components/FloatingButtons";
 import Reveal from "@/components/Reveal";
@@ -36,8 +38,22 @@ export const metadata: Metadata = {
   },
 };
 
+function UltraHairline() {
+  return (
+    <div
+      className="h-px w-full"
+      style={{ background: "linear-gradient(to right, transparent, var(--um-line) 20%, var(--um-line) 80%, transparent)" }}
+      aria-hidden
+    />
+  );
+}
+
 export default function Home() {
   const show = business.showSections ?? {};
+
+  const variant = business.designVariant ?? "classic";
+  const variantDefaults = VARIANT_DEFAULT_FONTS[variant];
+  const isUltra = variant === "ultramodern";
 
   const sectionComponents: Record<SectionId, React.ReactNode> = {
     services: <Services />,
@@ -46,19 +62,17 @@ export default function Home() {
     reviews: show.reviews !== false ? <Testimonials /> : null,
     rooms: <Rooms />,
     faq: show.faq !== false ? <FAQ /> : null,
+    process: isUltra && show.process !== false ? <Process /> : null,
+    reservation: show.reservation !== false ? <Reservation /> : null,
   };
 
   // Merge configured order with any sections missing from it (forward-compat)
   const configuredOrder = business.sectionOrder ?? DEFAULT_SECTION_ORDER;
   const order = [...configuredOrder, ...DEFAULT_SECTION_ORDER.filter((id) => !configuredOrder.includes(id))];
-
-  const variant = business.designVariant ?? "classic";
-  const variantDefaults = VARIANT_DEFAULT_FONTS[variant];
   // Ultramodern is a locked, cohesive design system — its geometric-sans
   // typography (Jost) plus the Allura signature script are part of the variant's
   // identity and are intentionally NOT overridable per client, so the look stays
   // consistent regardless of any leftover headingFont/bodyFont in the JSON.
-  const isUltra = variant === "ultramodern";
   const headingFont = FONT_MAP[isUltra ? variantDefaults.heading : business.headingFont ?? variantDefaults.heading];
   const bodyFont = FONT_MAP[isUltra ? variantDefaults.body : business.bodyFont ?? variantDefaults.body];
   // For ultramodern, --gold is forced to a warm gold (champagne fallback) so the
@@ -97,10 +111,18 @@ export default function Home() {
             </Reveal>
           </div>
         )}
-        {order.map((id) => (
-          <Fragment key={id}>{sectionComponents[id]}</Fragment>
-        ))}
-        <Reservation />
+        <StatsStrip />
+        {isUltra
+          ? order.map((id, idx) => (
+              <Fragment key={id}>
+                {idx > 0 && sectionComponents[id] != null && <UltraHairline />}
+                {sectionComponents[id]}
+              </Fragment>
+            ))
+          : order.map((id) => (
+              <Fragment key={id}>{sectionComponents[id]}</Fragment>
+            ))}
+        {isUltra && <UltraHairline />}
         <Contact />
       </main>
       <Footer />

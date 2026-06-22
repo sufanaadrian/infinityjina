@@ -429,25 +429,12 @@ function NavbarUltramodern() {
           <a href="#contact" className={navLinkCls}>Contact</a>
         </nav>
         <div className="flex items-center gap-3">
-          {showCallButton && (isAccommodation && bookingUrl ? (
-            <a
-              href={bookingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`hidden sm:flex items-center gap-2 text-xs font-medium tracking-[0.2em] uppercase text-gold border border-gold-soft px-5 py-2.5 ${ctaRadius} hover:bg-gold-soft hover:border-gold transition-colors`}
-            >
-              Rezervă
-            </a>
-          ) : (
-            <a
-              href={`tel:${business.phone.replace(/\s/g, "")}`}
-              className={`flex items-center gap-2 text-xs font-medium tracking-[0.2em] uppercase text-gold border border-gold-soft px-5 py-2.5 ${ctaRadius} hover:bg-gold-soft hover:border-gold transition-colors`}
-            >
-              <PhoneIcon className="w-4 h-4" />
-              <span className="hidden sm:inline">{business.phone}</span>
-              <span className="sm:hidden">Sună</span>
-            </a>
-          ))}
+          <a
+            href="#rezervare"
+            className={`hidden sm:flex items-center gap-2 text-xs font-medium tracking-[0.2em] uppercase text-gold border border-gold-soft px-5 py-2.5 ${ctaRadius} hover:bg-gold-soft hover:border-gold transition-colors`}
+          >
+            Rezervă
+          </a>
           <details ref={detailsRef} className="md:hidden relative">
             <summary className="list-none flex items-center justify-center w-11 h-11 text-white/80 hover:text-gold transition-colors cursor-pointer touch-manipulation select-none">
               <MenuIcon className="w-5 h-5" />
@@ -457,12 +444,9 @@ function NavbarUltramodern() {
               {isAccommodation && <a href="#rooms" onClick={closeMenu} className="hover:text-gold transition-colors py-1">Camere</a>}
               <a href="#about" onClick={closeMenu} className="hover:text-gold transition-colors py-1">Despre noi</a>
               <a href="#contact" onClick={closeMenu} className="hover:text-gold transition-colors py-1">Contact</a>
-              {isAccommodation && bookingUrl && (
-                <a href={bookingUrl} target="_blank" rel="noopener noreferrer"
-                  className="font-medium py-1 text-gold" onClick={closeMenu}>
-                  Rezervă acum →
-                </a>
-              )}
+              <a href="#rezervare" onClick={closeMenu} className="font-medium py-1 text-gold">
+                Rezervă →
+              </a>
             </nav>
           </details>
         </div>

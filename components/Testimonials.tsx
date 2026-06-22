@@ -1,3 +1,6 @@
+"use client";
+
+import { useRef, useEffect } from "react";
 import { business, DEFAULT_NATURE_BG, type Testimonial } from "@/config/business";
 import { RichInline } from "@/components/RichText";
 import UltraHeading from "@/components/UltraHeading";
@@ -112,57 +115,197 @@ export default function Testimonials() {
   return <TestimonialsClassic {...props} />;
 }
 
-// ─── Ultramodern — seamless auto-scrolling marquee of quote cards ──────────
-function UltraQuoteCard({ t, primaryColor }: { t: Testimonial; primaryColor: string }) {
+// ─── Ultramodern — draggable, auto-scrolling card track ─────────────────────
+function UltraQuoteCard({ t }: { t: Testimonial }) {
   return (
-    <figure className="w-[82vw] sm:w-[24rem] shrink-0 mx-3 bg-[#0C0C0E] border border-white/[0.08] p-9 flex flex-col gap-5 whitespace-normal">
-      <QuoteIcon className="w-8 h-8 opacity-80 shrink-0" color={primaryColor} />
-      <blockquote className="text-white/75 text-base font-light italic leading-relaxed flex-1">
+    <figure
+      className="group w-[82vw] sm:w-[22rem] shrink-0 mx-3 flex flex-col gap-5 whitespace-normal bg-[#0C0C0E] border border-white/[0.06] p-8 transition-all duration-500
+        shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]
+        hover:border-white/[0.14] hover:bg-[#0F0F11]
+        hover:shadow-[0_0_55px_-8px_rgba(201,168,106,0.2),inset_0_1px_0_0_rgba(201,168,106,0.25)]"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <QuoteIcon
+          className="w-8 h-8 shrink-0 transition-all duration-500 group-hover:scale-110"
+          color="var(--gold)"
+        />
+        {t.stars && t.stars > 0 && <Stars stars={t.stars} />}
+      </div>
+      <blockquote className="text-white/55 text-sm font-light italic leading-relaxed flex-1 transition-colors duration-500 group-hover:text-white/80">
         <RichInline text={t.text} />
       </blockquote>
-      <figcaption className="flex items-center gap-3 pt-2">
-        <span className="h-px w-7 shrink-0" style={{ backgroundColor: "var(--gold)" }} />
+      <figcaption className="flex items-center gap-3 pt-3 border-t border-white/[0.06] transition-colors duration-500 group-hover:border-white/[0.12]">
+        <div
+          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 transition-all duration-500 group-hover:shadow-[0_0_14px_rgba(201,168,106,0.4)]"
+          style={{ backgroundColor: "var(--gold)", color: "#0a0a0b" }}
+        >
+          {t.name.charAt(0)}
+        </div>
         <div>
-          <p className="text-sm font-medium tracking-wide text-white not-italic">{t.name}</p>
-          {t.role && <p className="text-xs text-white/40 mt-0.5 not-italic">{t.role}</p>}
+          <p className="text-sm font-medium tracking-wide text-white/75 transition-colors duration-300 group-hover:text-white/95">{t.name}</p>
+          {t.role && <p className="text-[11px] text-white/30 mt-0.5 transition-colors duration-300 group-hover:text-white/50">{t.role}</p>}
         </div>
       </figcaption>
     </figure>
   );
 }
 
-function TestimonialsUltramodern({ testimonials, headingTitle, headingSubtitle, primaryColor }: SectionProps) {
-  // Duplicate the row so translating the track -50% loops seamlessly. Speed
-  // scales with how many reviews there are so it never feels too fast.
-  const duration = Math.max(testimonials.length * 7, 28);
+function TestimonialsUltramodern({ testimonials, headingTitle, headingSubtitle }: SectionProps) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const animRef = useRef<number>(0);
+  const isPaused = useRef(false);
+  const isDragging = useRef(false);
+  const dragStartX = useRef(0);
+  const dragStartScroll = useRef(0);
+  // Virtual float position — RAF writes this to scrollLeft every frame
+  const pos = useRef(0);
+  // Where pos should ease towards (arrow clicks shift this)
+  const targetPos = useRef(0);
+  const SPEED = 0.5;
+  const LERP = 0.1; // easing factor for arrow navigation
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const getHalf = () => track.scrollWidth / 2;
+
+    const wrap = () => {
+      const half = getHalf();
+      if (half <= 0) return;
+      while (pos.current >= half) { pos.current -= half; targetPos.current -= half; }
+      while (pos.current < 0) { pos.current += half; targetPos.current += half; }
+    };
+
+    const tick = () => {
+      if (!isDragging.current) {
+        if (!isPaused.current) targetPos.current += SPEED;
+        // Ease pos towards target
+        const diff = targetPos.current - pos.current;
+        pos.current += Math.abs(diff) < 0.05 ? diff : diff * LERP;
+        wrap();
+        track.scrollLeft = pos.current;
+      }
+      animRef.current = requestAnimationFrame(tick);
+    };
+    animRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animRef.current);
+  }, []);
+
+  // Mouse + touch handlers — both attached as native listeners so we can
+  // call preventDefault() on touchmove (React touch listeners are passive by default)
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const applyDelta = (clientX: number) => {
+      const delta = (dragStartX.current - clientX) * 1.4;
+      const next = dragStartScroll.current + delta;
+      track.scrollLeft = next;
+      pos.current = next;
+      targetPos.current = next;
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDragging.current) return;
+      applyDelta(e.clientX);
+    };
+    const onMouseUp = () => {
+      isDragging.current = false;
+      isPaused.current = false;
+    };
+    const onTouchStart = (e: TouchEvent) => {
+      isDragging.current = true;
+      isPaused.current = true;
+      dragStartX.current = e.touches[0].clientX;
+      dragStartScroll.current = pos.current;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isDragging.current) return;
+      e.preventDefault(); // stops page scroll + kills native inertia
+      applyDelta(e.touches[0].clientX);
+    };
+    const onTouchEnd = () => {
+      isDragging.current = false;
+      isPaused.current = false;
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+    track.addEventListener("touchstart", onTouchStart, { passive: true });
+    track.addEventListener("touchmove", onTouchMove, { passive: false });
+    track.addEventListener("touchend", onTouchEnd);
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+      track.removeEventListener("touchstart", onTouchStart);
+      track.removeEventListener("touchmove", onTouchMove);
+      track.removeEventListener("touchend", onTouchEnd);
+    };
+  }, []);
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    isDragging.current = true;
+    isPaused.current = true;
+    dragStartX.current = e.clientX;
+    dragStartScroll.current = pos.current;
+    e.preventDefault();
+  };
+
+  const scrollDir = (dir: 1 | -1) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const cardW = (track.querySelector("figure") as HTMLElement | null)?.offsetWidth ?? 376;
+    targetPos.current += dir * (cardW + 24);
+  };
+
+  const NavBtn = ({ dir }: { dir: 1 | -1 }) => (
+    <button
+      onClick={() => scrollDir(dir)}
+      className="w-10 h-10 flex items-center justify-center border border-white/[0.1] text-white/35 hover:border-gold-soft hover:text-gold transition-all duration-200 text-2xl leading-none shrink-0"
+      aria-label={dir === -1 ? "Anterior" : "Urmator"}
+    >
+      {dir === -1 ? "‹" : "›"}
+    </button>
+  );
+
+  const doubled = [...testimonials, ...testimonials];
 
   return (
     <section id="testimonials" className="py-28 md:py-36 bg-[#0A0A0B] overflow-hidden">
-      <div className="max-w-6xl mx-auto px-6 mb-14">
-        <UltraHeading eyebrow="Recenzii" title={headingTitle} subtitle={headingSubtitle} align="left" />
-      </div>
+      {/* Ambient glow behind the whole section */}
+      <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(ellipse at center, var(--gold) 0%, transparent 70%)" }} aria-hidden />
 
-      <div className="um-marquee-wrap relative">
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-16 md:w-32 z-10" style={{ background: "linear-gradient(to right, #0A0A0B, transparent)" }} />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-16 md:w-32 z-10" style={{ background: "linear-gradient(to left, #0A0A0B, transparent)" }} />
-        <div className="um-marquee" style={{ ["--um-marquee-dur" as string]: `${duration}s` }}>
-          <div className="flex">
-            {testimonials.map((t, i) => (
-              <UltraQuoteCard key={`a${i}`} t={t} primaryColor={primaryColor} />
-            ))}
-          </div>
-          <div className="flex" aria-hidden="true">
-            {testimonials.map((t, i) => (
-              <UltraQuoteCard key={`b${i}`} t={t} primaryColor={primaryColor} />
-            ))}
-          </div>
+      <div className="max-w-6xl mx-auto px-6 mb-14 flex items-end justify-between gap-6 flex-wrap">
+        <UltraHeading eyebrow="Recenzii" title={headingTitle} subtitle={headingSubtitle} align="left" />
+        <div className="hidden sm:flex items-center gap-2">
+          <NavBtn dir={-1} />
+          <NavBtn dir={1} />
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="relative">
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-12 md:w-28 z-10" style={{ background: "linear-gradient(to right, #0A0A0B, transparent)" }} />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-12 md:w-28 z-10" style={{ background: "linear-gradient(to left, #0A0A0B, transparent)" }} />
+        <div
+          ref={trackRef}
+          className="flex overflow-x-hidden select-none cursor-grab active:cursor-grabbing py-6"
+          onMouseDown={onMouseDown}
+        >
+          {doubled.map((t, i) => (
+            <UltraQuoteCard key={i} t={t} />
+          ))}
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 mt-8 flex items-center gap-3 justify-end">
+        <div className="flex sm:hidden items-center gap-2">
+          <NavBtn dir={-1} />
+          <NavBtn dir={1} />
+        </div>
         <GoogleReviewsButton
-          wrapperClassName="mt-14 text-center"
-          linkClassName="inline-flex items-center gap-2 font-medium tracking-[0.15em] uppercase text-sm px-7 py-3.5 rounded-full border border-gold-soft text-gold hover:bg-gold-soft hover:border-gold transition-colors"
+          wrapperClassName=""
+          linkClassName="h-10 inline-flex items-center gap-2 px-4 text-xs font-medium tracking-[0.15em] uppercase border border-gold-soft text-gold hover:bg-gold-soft hover:border-gold transition-colors"
         />
       </div>
     </section>

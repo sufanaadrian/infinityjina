@@ -52,9 +52,9 @@ export default function Gallery() {
           <GalleryLightbox
             images={business.gallery}
             name={stripMarkdown(business.name)}
-            previewLimit={business.galleryPreviewLimit ?? 8}
+            previewLimit={business.galleryPreviewLimit ?? 9}
             accentColor={business.primaryColor}
-            editorial
+            masonry
           />
         </div>
       </section>

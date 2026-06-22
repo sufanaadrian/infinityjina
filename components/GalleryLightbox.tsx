@@ -1,13 +1,8 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 
-/**
- * Pure-CSS gallery + lightbox — intentionally NO JavaScript.
- *
- * "Show all" uses a native <details> element and the fullscreen viewer uses
- * the `:target` pseudo-class (anchor links). This means the gallery works even
- * if the page's JS never hydrates (e.g. flaky mobile Safari), which is exactly
- * the failure visitors were hitting on iPhone.
- */
 export default function GalleryLightbox({
   images,
   name,
@@ -15,6 +10,7 @@ export default function GalleryLightbox({
   accentColor,
   showAllLabel,
   editorial = false,
+  masonry = false,
 }: {
   images: string[];
   name: string;
@@ -24,15 +20,33 @@ export default function GalleryLightbox({
   /** Ultramodern look: sharp-cornered cinematic tiles, gold hover veil,
    *  frame numbers and a "VIEW" cue. Reuses the same pure-CSS lightbox. */
   editorial?: boolean;
+  /** True masonry via CSS columns — tiles stack at their natural (cycling)
+   *  aspect ratio for a magazine editorial feel. Implies editorial styling. */
+  masonry?: boolean;
 }) {
+  const [showAll, setShowAll] = useState(false);
+
   if (images.length === 0) return null;
 
   const limit = previewLimit && previewLimit > 0 ? previewLimit : images.length;
-  const preview = images.slice(0, limit);
-  const rest = images.slice(limit);
+  const hasMore = images.length > limit;
+  const visible = showAll ? images : images.slice(0, limit);
   const n = images.length;
 
   const accent = accentColor ?? "#6B7280";
+
+  // Masonry: CSS columns with cycling aspect ratios (portrait → square → landscape)
+  // so tiles have natural visual variety without knowing image dimensions.
+  const MASONRY_ASPECTS = [
+    "aspect-[3/4]",   // portrait
+    "aspect-[4/3]",   // landscape
+    "aspect-square",  // square
+    "aspect-[3/4]",   // portrait
+    "aspect-[16/9]",  // wide
+    "aspect-[4/3]",   // landscape
+  ];
+
+  const masonryColsCls = "columns-2 sm:columns-3 md:columns-4 gap-2 md:gap-3";
 
   // Cycle through a few cell sizes so the gallery reads as a bento-style
   // mosaic with varied box sizes instead of a uniform grid of identical tiles.
@@ -46,7 +60,26 @@ export default function GalleryLightbox({
     : "grid grid-cols-2 md:grid-cols-3 [grid-auto-flow:dense] auto-rows-[140px] sm:auto-rows-[160px] md:auto-rows-[180px] gap-4";
 
   const Thumb = ({ url, i }: { url: string; i: number }) =>
-    editorial ? (
+    masonry ? (
+      <a
+        href={`#lb-${i}`}
+        className={`um-gallery-tile group relative block w-full break-inside-avoid mb-2 md:mb-3 cursor-zoom-in overflow-hidden ${MASONRY_ASPECTS[i % MASONRY_ASPECTS.length]}`}
+        aria-label={`${name} — deschide foto ${i + 1}`}
+      >
+        <Image
+          src={url}
+          alt={`${name} — foto ${i + 1}`}
+          fill
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          className="object-cover pointer-events-none"
+        />
+        <span className="um-gallery-veil" />
+        <span className="absolute top-3 left-3 text-[10px] tracking-[0.3em] tabular-nums text-white/55">
+          {String(i + 1).padStart(2, "0")}
+        </span>
+        <span className="um-gallery-cue">View</span>
+      </a>
+    ) : editorial ? (
       <a
         href={`#lb-${i}`}
         className={`um-gallery-tile group block w-full h-full cursor-zoom-in ${SIZES[i % SIZES.length]}`}
@@ -81,37 +114,38 @@ export default function GalleryLightbox({
       </a>
     );
 
+  const containerCls = masonry ? masonryColsCls : gridCls;
+  const isEditorialStyle = masonry || editorial;
+
   return (
     <div>
-      <div className={gridCls}>
-        {preview.map((url, i) => (
+      {/* Single unified grid — no gap between preview and rest */}
+      <div className={containerCls}>
+        {visible.map((url, i) => (
           <Thumb key={i} url={url} i={i} />
         ))}
       </div>
 
-      {rest.length > 0 && (
-        <details className="group mt-4">
-          <summary className={`list-none [&::-webkit-details-marker]:hidden group-open:hidden cursor-pointer ${editorial ? "mt-8 text-center" : "mb-4 text-center"}`}>
-            {editorial ? (
-              <span className="inline-flex items-center gap-3 text-[11px] font-medium tracking-[0.3em] uppercase text-gold border-b border-gold-soft pb-1.5 transition-colors hover:border-gold">
-                {showAllLabel ?? `Vezi toate fotografiile (${n})`}
-                <span aria-hidden>↓</span>
-              </span>
-            ) : (
-              <span
-                className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-full border-2 transition-colors"
-                style={{ borderColor: accent, color: accent }}
-              >
-                {showAllLabel ?? `Vezi toate (${n})`}
-              </span>
-            )}
-          </summary>
-          <div className={`${gridCls} ${editorial ? "mt-3" : ""}`}>
-            {rest.map((url, i) => (
-              <Thumb key={i} url={url} i={i + limit} />
-            ))}
-          </div>
-        </details>
+      {hasMore && !showAll && (
+        <div className={isEditorialStyle ? "mt-8 text-center" : "mt-4 text-center"}>
+          {isEditorialStyle ? (
+            <button
+              onClick={() => setShowAll(true)}
+              className="inline-flex items-center gap-3 text-[11px] font-medium tracking-[0.3em] uppercase text-gold border-b border-gold-soft pb-1.5 transition-colors hover:border-gold"
+            >
+              {showAllLabel ?? `Vezi toate fotografiile (${n})`}
+              <span aria-hidden>↓</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => setShowAll(true)}
+              className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-full border-2 transition-colors hover:opacity-80"
+              style={{ borderColor: accent, color: accent }}
+            >
+              {showAllLabel ?? `Vezi toate (${n})`}
+            </button>
+          )}
+        </div>
       )}
 
       {/* Fullscreen viewers — hidden until their anchor is the URL :target. */}

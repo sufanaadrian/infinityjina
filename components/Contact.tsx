@@ -80,16 +80,7 @@ export default function Contact() {
   const headingSubtitle = heading.subtitle || "Suntem disponibili pentru orice întrebare. Contactați-ne și vă răspundem în cel mai scurt timp.";
 
   if (isUltra) {
-    return (
-      <ContactUltramodern
-        submitted={submitted}
-        loading={loading}
-        onSubmit={handleSubmit}
-        showForm={showForm}
-        headingTitle={headingTitle}
-        headingSubtitle={headingSubtitle}
-      />
-    );
+    return <ContactUltramodern headingTitle={headingTitle} headingSubtitle={headingSubtitle} />;
   }
 
   return (
@@ -309,22 +300,7 @@ function UltraInfoRow({ label, children }: { label: string; children: React.Reac
   );
 }
 
-function ContactUltramodern({
-  submitted,
-  loading,
-  onSubmit,
-  showForm,
-  headingTitle,
-  headingSubtitle,
-}: {
-  submitted: boolean;
-  loading: boolean;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  showForm: boolean;
-  headingTitle: string;
-  headingSubtitle: string;
-}) {
-  const btnRadius = getButtonRadius(false, business.buttonStyle);
+function ContactUltramodern({ headingTitle, headingSubtitle }: { headingTitle: string; headingSubtitle: string }) {
   const phones = [business.phone, ...(business.extraPhones ?? [])].filter((p) => p.trim());
   const address = [business.address, business.city].filter((p) => p.trim()).join(", ");
 
@@ -333,8 +309,7 @@ function ContactUltramodern({
       <div className="max-w-6xl mx-auto px-6">
         <UltraHeading eyebrow="Contact" title={headingTitle} subtitle={headingSubtitle} align="left" className="mb-16" />
 
-        <div className={showForm ? "grid lg:grid-cols-2 gap-14 lg:gap-20" : "max-w-2xl"}>
-          {/* Info */}
+        <div className="max-w-2xl">
           <div className="flex flex-col border-b border-white/[0.08]">
             {phones.length > 0 && (
               <UltraInfoRow label="Telefon">
@@ -354,59 +329,19 @@ function ContactUltramodern({
             {business.hours && (
               <UltraInfoRow label="Program"><RichInline text={business.hours} /></UltraInfoRow>
             )}
-            {business.googleMapsEmbedUrl && (
-              <div className="mt-6 h-52 overflow-hidden border border-white/[0.08]">
-                <iframe
-                  src={business.googleMapsEmbedUrl}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0, filter: "grayscale(1) invert(0.92) contrast(0.9)" }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Locație pe hartă"
-                />
-              </div>
-            )}
           </div>
-
-          {/* Form */}
-          {showForm && (
-            <div>
-              {submitted ? (
-                <div className="flex flex-col items-center justify-center h-full text-center py-12">
-                  <div className="w-14 h-14 flex items-center justify-center border border-gold-soft mb-5">
-                    <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-light tracking-wide text-white mb-2">Mesaj trimis</h3>
-                  <p className="text-white/45 font-light">Vă vom contacta în cel mai scurt timp.</p>
-                </div>
-              ) : (
-                <form onSubmit={onSubmit} className="flex flex-col gap-9">
-                  <label className="block">
-                    <span className="block text-[10px] tracking-[0.35em] uppercase text-gold-70 mb-3">Nume *</span>
-                    <input name="name" type="text" required className="um-input w-full py-2 text-base" placeholder="Ion Popescu" />
-                  </label>
-                  <label className="block">
-                    <span className="block text-[10px] tracking-[0.35em] uppercase text-gold-70 mb-3">Telefon *</span>
-                    <input name="phone" type="tel" required className="um-input w-full py-2 text-base" placeholder="0722 000 000" />
-                  </label>
-                  <label className="block">
-                    <span className="block text-[10px] tracking-[0.35em] uppercase text-gold-70 mb-3">Mesaj *</span>
-                    <textarea name="message" required rows={3} className="um-input w-full py-2 text-base resize-none" placeholder="Spuneți-ne ce vă interesează..." />
-                  </label>
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className={`self-start inline-flex items-center gap-2.5 text-on-primary font-medium tracking-[0.15em] uppercase text-sm px-9 py-4 ${btnRadius} transition-all hover:shadow-[0_0_30px_-5px_var(--gold)] disabled:opacity-60`}
-                    style={{ backgroundColor: "var(--gold)" }}
-                  >
-                    {loading ? "Se trimite..." : "Trimite mesajul"}
-                  </button>
-                </form>
-              )}
+          {business.googleMapsEmbedUrl && (
+            <div className="mt-8 h-64 overflow-hidden border border-white/[0.08]">
+              <iframe
+                src={business.googleMapsEmbedUrl}
+                width="100%"
+                height="100%"
+                style={{ border: 0, filter: "grayscale(1) invert(0.92) contrast(0.9)" }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Locație pe hartă"
+              />
             </div>
           )}
         </div>

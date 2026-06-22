@@ -44,9 +44,12 @@
         "Baie privată",
         "Balcon"
       ],
-      "imageUrl": "",
+      "imageUrl": "/images/infinity-jina/portarit.png",
       "bookingUrl": "",
-      "images": []
+      "images": [
+        "/images/infinity-jina/portarit.png",
+        "/images/infinity-jina/ChatGPT Image Jun 20, 2026 at 10_04_36 AM.png"
+      ]
     },
     {
       "title": "Camera cvadruplă",
@@ -57,9 +60,12 @@
         "Baie privată",
         "Balcon"
       ],
-      "imageUrl": "",
+      "imageUrl": "/images/infinity-jina/ChatGPT Image Jun 20, 2026 at 10_04_36 AM.png",
       "bookingUrl": "",
-      "images": []
+      "images": [
+        "/images/infinity-jina/ChatGPT Image Jun 20, 2026 at 10_04_36 AM.png",
+        "/images/infinity-jina/portarit.png"
+      ]
     }
   ],
   "testimonials": [
@@ -118,8 +124,36 @@
     "Mese și pachete all-inclusive disponibile",
     ""
   ],
-  "stats": [],
-  "gallery": [],
+  "stats": [
+    {
+      "value": "6",
+      "label": "Camere premium"
+    },
+    {
+      "value": "360",
+      "label": "Vedere panoramica"
+    },
+    {
+      "value": "16",
+      "label": "Locuri"
+    },
+    {
+      "value": "4★",
+      "label": "Rating"
+    }
+  ],
+  "gallery": [
+    "/images/infinity-jina/ChatGPT Image Jun 20, 2026 at 10_04_36 AM.png",
+    "/images/infinity-jina/portarit.png",
+    "/images/infinity-jina/ChatGPT Image Jun 20, 2026 at 10_04_36 AM.png",
+    "/images/infinity-jina/portarit.png",
+    "/images/infinity-jina/ChatGPT Image Jun 20, 2026 at 10_04_36 AM.png",
+    "/images/infinity-jina/portarit.png",
+    "/images/infinity-jina/ChatGPT Image Jun 20, 2026 at 10_04_36 AM.png",
+    "/images/infinity-jina/portarit.png",
+    "/images/infinity-jina/ChatGPT Image Jun 20, 2026 at 10_04_36 AM.png",
+    "/images/infinity-jina/portarit.png"
+  ],
   "socialLinks": {
     "facebook": "https://www.facebook.com/people/Panoramic-Hill-Jina/61585457155841/"
   },
@@ -152,7 +186,9 @@
     "gallery",
     "rooms",
     "reviews",
-    "faq"
+    "faq",
+    "process",
+    "reservation"
   ],
   "logoUrl": "",
   "logoSize": "lg",
@@ -176,5 +212,6 @@
   "heroTint": "none",
   "repoName": "infinityjina",
   "heroImagePortraitUrl": "/images/infinity-jina/portarit.png",
-  "heroTextBackdrop": true
+  "heroTextBackdrop": true,
+  "galleryPreviewLimit": 6
 }

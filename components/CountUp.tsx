@@ -2,64 +2,75 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// Animated number that counts up from 0 to its target the first time it
-// scrolls into view. Parses a leading number out of strings like "500+",
-// "100%", "24h", "10+" and keeps whatever prefix/suffix surrounds it. Falls
-// back to showing the raw value (no animation) when there's no number or the
-// visitor prefers reduced motion.
+function parse(value: string) {
+  const m = value.match(/^(\D*)(\d[\d.,]*)(.*)$/);
+  if (!m) return null;
+  const [, prefix, rawNum, suffix] = m;
+  const decimals = rawNum.includes(".") ? rawNum.split(".")[1].length : 0;
+  const target = parseFloat(rawNum.replace(/,/g, ""));
+  const zero = `${prefix}${(0).toFixed(decimals)}${suffix}`;
+  return { prefix, suffix, decimals, target, zero };
+}
+
 export default function CountUp({ value, className }: { value: string; className?: string }) {
-  const match = value.match(/^(\D*)(\d[\d.,]*)(.*)$/);
+  const parsed = parse(value);
   const ref = useRef<HTMLSpanElement>(null);
-  const [display, setDisplay] = useState(value);
+  const hasRun = useRef(false);
+  // Start at the zero-state ("0°", "0★", "0") so there's never a flash of the
+  // final value before the animation begins.
+  const [display, setDisplay] = useState(parsed?.zero ?? value);
 
   useEffect(() => {
-    if (!match) return;
+    if (!parsed) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      setDisplay(value);
+      return;
+    }
+
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
 
-    const [, prefix, rawNum, suffix] = match;
-    const decimals = rawNum.includes(".") ? rawNum.split(".")[1].length : 0;
-    const target = parseFloat(rawNum.replace(/,/g, ""));
+    const { prefix, suffix, decimals, target } = parsed;
     let raf = 0;
-    let started = false;
 
     const run = () => {
-      if (started) return;
-      started = true;
-      const duration = 1400;
+      if (hasRun.current) return;
+      hasRun.current = true;
+
+      const duration = 1600;
       const start = performance.now();
+
       const tick = (now: number) => {
         const t = Math.min((now - start) / duration, 1);
-        const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
-        const current = (target * eased).toFixed(decimals);
-        setDisplay(`${prefix}${current}${suffix}`);
+        const eased = 1 - Math.pow(1 - t, 3);
+        setDisplay(`${prefix}${(target * eased).toFixed(decimals)}${suffix}`);
         if (t < 1) raf = requestAnimationFrame(tick);
+        else setDisplay(value);
       };
-      setDisplay(`${prefix}${(0).toFixed(decimals)}${suffix}`);
+
       raf = requestAnimationFrame(tick);
     };
+
+    let delayTimer: ReturnType<typeof setTimeout> | null = null;
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
-          run();
           observer.disconnect();
+          delayTimer = setTimeout(run, 300);
         }
       },
-      { threshold: 0.4 }
+      { threshold: 0.3 }
     );
     observer.observe(el);
-    const timer = window.setTimeout(run, 1800); // safety net
+
     return () => {
       observer.disconnect();
       cancelAnimationFrame(raf);
-      window.clearTimeout(timer);
+      if (delayTimer !== null) clearTimeout(delayTimer);
     };
-  }, [match]);
+  }, [value]);
 
-  // `tabular-nums` keeps every digit the same width so the value doesn't jitter
-  // sideways as it counts up (proportional digits change width each frame).
   return (
     <span ref={ref} className={className} style={{ fontVariantNumeric: "tabular-nums" }}>
       {display}
